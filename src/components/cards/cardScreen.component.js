@@ -10,7 +10,8 @@ const _cardScreen = StyleSheet.create({
     minHeight: 80
   },
   header: {
-    backgroundColor: _colors.primary
+    backgroundColor: _colors.primary,
+    maxHeight: 147,
   }
 })
 
