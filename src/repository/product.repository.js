@@ -1,15 +1,16 @@
-import {db} from '@src/config/firebase.config';
-import {collection, getDocs, query, where} from 'firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 
-const productRef = collection(db, 'product');
+const productCollection = firestore().collection('product');
 
 export class ProductRepository {
   async getById(id) {
     try {
-      const result = await getDocs(query(productRef, where('id', '==', id)));
-      return result;
-    } catch (error) {
-      throw new Error('Not found data');
+      const docSnap = await productCollection.doc(id).get();
+      if (!docSnap.exists) throw new Error('NOT_FOUND');
+      return docSnap.data();
+    } catch (err) {
+      console.error(err.message);
+      throw new Error(err);
     }
   }
 }

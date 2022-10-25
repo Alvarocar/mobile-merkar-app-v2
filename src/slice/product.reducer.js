@@ -24,8 +24,14 @@ export const GET_PRODUCT_BY_ID = createAsyncThunk(
 const productSlice = createSlice({
   name: 'product',
   initialState: initialState(),
+  reducers: {
+    CLEAN_DETAIL: state => {
+      state.productDetail = null;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(GET_PRODUCT_BY_ID.fulfilled, (state, action) => {
+      console.info(action.payload);
       state.productDetail = action.payload;
     });
     builder.addCase(GET_PRODUCT_BY_ID.rejected, state => {
@@ -35,6 +41,8 @@ const productSlice = createSlice({
 });
 
 export default productSlice.reducer;
+
+export const {CLEAN_DETAIL} = productSlice.actions;
 
 export const selectProducts = state => state.product.products;
 
