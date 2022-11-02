@@ -39,7 +39,7 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-  right: {flex: 2},
+  right: {flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-around'},
   description: {
     color: _colors.black,
     opacity: 0.6,
@@ -54,4 +54,19 @@ export default StyleSheet.create({
     width: 100,
     height: 150,
   },
+  action: {
+    
+  },
+  countSection: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  counter: {
+    color: _colors.black,
+    width: 50,
+    textAlign: 'center',
+  }
 });
