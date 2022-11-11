@@ -1,14 +1,34 @@
-import {CLEAN_DETAIL, selectProductDetail} from '@src/slice/product.reducer';
-import {isNull, stubTrue} from 'lodash';
+import {
+  CLEAN_DETAIL,
+  SAVE_IN_PRODUCT_LIST,
+  selectProductDetail,
+} from '@src/slice/product.reducer';
+import {isNull} from 'lodash';
 import PropTypes from 'prop-types';
-import {useCallback, useMemo, useState} from 'react';
-import {Button, Image, Modal, Pressable, Text, View} from 'react-native';
+import {useCallback, useMemo} from 'react';
+import {Modal, Pressable, Text, View} from 'react-native';
 import {connect} from 'react-redux';
-import styles from '@src/styles/cards/productDetail.styles';
+import ProductDetail from '../cards/productDetail.component';
+import styles from '@src/styles/hoc/withProductDetail.styles';
 
 export default WrappedComponent => {
-  const WithProductDetail = ({product, onClean, ...props}) => {
-    const ProductDetail = useMemo(() => {
+  const WithProductDetail = ({product, onClean, saveProduct, ...props}) => {
+    const Footer = useCallback(() => {
+      return (
+        <View style={styles.footer}>
+          <Pressable style={styles.add}>
+            <Text style={styles.text} onPress={() => saveProduct(product)}>
+              Agregar
+            </Text>
+          </Pressable>
+          <Pressable style={styles.cancel} onPress={onClean}>
+            <Text style={styles.text}>Cancelar</Text>
+          </Pressable>
+        </View>
+      );
+    });
+
+    const ProductView = useMemo(() => {
       if (isNull(product)) {
         return <></>;
       }
@@ -18,13 +38,24 @@ export default WrappedComponent => {
           transparent
           onTouchCancel={onClean}
           onRequestClose={onClean}>
-          <ProductView product={product} onPressMask={onClean} />
+          <View style={styles.container}>
+            <Pressable onPress={onClean} style={styles.mask} />
+            <View style={styles.productContainer}>
+              <ProductDetail
+                styleContainer={styles.card}
+                product={product}
+                onPressMask={onClean}
+                footer={Footer}
+              />
+            </View>
+          </View>
         </Modal>
       );
     }, [product]);
+
     return (
       <>
-        {ProductDetail}
+        {ProductView}
         <WrappedComponent {...props} />
       </>
     );
@@ -46,58 +77,8 @@ export default WrappedComponent => {
 
   const mapDispatchToProps = dispatch => ({
     onClean: () => dispatch(CLEAN_DETAIL()),
+    saveProduct: product => dispatch(SAVE_IN_PRODUCT_LIST(product)),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(WithProductDetail);
-};
-
-const ProductView = ({product, onPressMask = stubTrue}) => {
-  const [ counter, setCounter ] = useState(1)
-  const increment = useCallback(() => {
-    setCounter(c => c + 1)
-  }, [setCounter]) 
-  const decrement = useCallback(() => {
-    setCounter(c => {
-      if (c <= 1) return c
-      return c - 1
-    })
-  }, [setCounter]) 
-
-  const totalPrice = useMemo(() => product.price * counter, [product.price, counter])
-
-  return (
-  <>
-    <View style={styles.mask}></View>
-    <View style={styles.productContainer}>
-      <View style={styles.product}>
-        <View style={styles.left}>
-          <Text style={styles.title}> {product.name} </Text>
-          <Image style={styles.image} source={{uri: product.imageUrl}} />
-        </View>
-        <View style={styles.right}>
-          <Text style={styles.price}>{`Precio Total: $${totalPrice}`}</Text>
-          <Text style={styles.description}> {product.description} </Text>
-          <View style={styles.countSection}>
-            <Button style={styles.action} title='-' onPress={decrement}/>
-            <Text style={styles.counter}>{ counter }</Text>
-            <Button style={styles.action} title='+' onPress={increment}/>
-          </View>
-          <Text style={styles.description}>{`Precio unitario: $${product.price}`}</Text>
-          <Button title='Cerrar' onPress={onPressMask}/>
-        </View>
-      </View>
-    </View>
-  </>
-)
-};
-
-ProductView.propTypes = {
-  product: PropTypes.shape({
-    currencyType: PropTypes.string,
-    description: PropTypes.string,
-    imageUrl: PropTypes.string,
-    name: PropTypes.string,
-    price: PropTypes.number,
-  }),
-  onPressMask: PropTypes.func,
 };

@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {ProductRepository} from '@src/repository/product.repository';
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 
 const productRepo = new ProductRepository();
 
@@ -24,15 +24,14 @@ export const GET_PRODUCT_BY_ID = createAsyncThunk(
 );
 
 const updateTotal = callback => (state, action) => {
-  callback(state, action)
-  const p = state.products
+  callback(state, action);
+  const p = state.products;
   if (isEmpty(p)) {
-    state.total = 0
-    return
+    state.total = 0;
+    return;
   }
-  state.total = p.reduce((a, b) => a.price + b.price)
-}
-
+  state.total = p.reduce((a, b) => a.price + b.price);
+};
 
 const productSlice = createSlice({
   name: 'product',
@@ -41,27 +40,26 @@ const productSlice = createSlice({
     CLEAN_DETAIL: state => {
       state.productDetail = null;
     },
-    SAVE_IN_PRODUCT_LIST: updateTotal(
-      (state, action) => {
-        state.products = [...state.products, action.payload]
-        state.total = state.products.reduce((a, b) => a.price + b.price)
-      }
-    )
-,
+    SAVE_IN_PRODUCT_LIST: updateTotal((state, action) => {
+      const {product, quantity} = action.payload;
+      state.products = [...state.products, action.payload];
+      state.total = state.products.reduce((a, b) => a.price + b.price);
+      console.info(state.products);
+    }),
     DELETE_PRODUCT_IN_LIST: updateTotal((state, action) => {
-      const id = action.payload
-      state.products = state.products.filter(p => p.id !== id)
+      const id = action.payload;
+      state.products = state.products.filter(p => p.id !== id);
     }),
     DELETE_GROUP_OF_PRODUCTS_IN_LIST: updateTotal((state, action) => {
       /**
        * @type {number[]}
        */
-      const groupId = action.payload
-      state.products = state.products.filter(p => groupId.includes(p.id))
+      const groupId = action.payload;
+      state.products = state.products.filter(p => groupId.includes(p.id));
     }),
     DROP_PRODUCT_LIST: updateTotal(state => {
-      state.products = []
-    })
+      state.products = [];
+    }),
   },
   extraReducers: builder => {
     builder.addCase(GET_PRODUCT_BY_ID.fulfilled, (state, action) => {
@@ -76,7 +74,13 @@ const productSlice = createSlice({
 
 export default productSlice.reducer;
 
-export const {CLEAN_DETAIL, DELETE_GROUP_OF_PRODUCTS_IN_LIST, DELETE_PRODUCT_IN_LIST, DROP_PRODUCT_LIST, SAVE_IN_PRODUCT_LIST} = productSlice.actions;
+export const {
+  CLEAN_DETAIL,
+  DELETE_GROUP_OF_PRODUCTS_IN_LIST,
+  DELETE_PRODUCT_IN_LIST,
+  DROP_PRODUCT_LIST,
+  SAVE_IN_PRODUCT_LIST,
+} = productSlice.actions;
 
 export const selectProducts = state => state.product.products;
 

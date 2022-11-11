@@ -2,15 +2,6 @@ import {StyleSheet} from 'react-native';
 import {dimensions, _colors} from '../_global.styles';
 
 export default StyleSheet.create({
-  mask: {
-    backgroundColor: _colors.black,
-    opacity: 0.8,
-    height: '100%',
-    paddingHorizontal: 20,
-    position: 'absolute',
-    height: dimensions.fullHeight,
-    width: dimensions.fullWidth,
-  },
   product: {
     backgroundColor: _colors.white,
     paddingHorizontal: 10,
@@ -39,7 +30,12 @@ export default StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
-  right: {flex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-around'},
+  right: {
+    flex: 2,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
   description: {
     color: _colors.black,
     opacity: 0.6,
@@ -47,7 +43,6 @@ export default StyleSheet.create({
   price: {
     color: _colors.black,
     fontSize: 18,
-    opacity: 0.9,
   },
   image: {
     marginTop: 20,
@@ -55,18 +50,30 @@ export default StyleSheet.create({
     height: 150,
   },
   action: {
-    
+    width: 30,
+    height: 30,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+  },
+  plus: {
+    backgroundColor: _colors.blue,
+  },
+  minus: {
+    backgroundColor: _colors.red,
   },
   countSection: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
   },
   counter: {
     color: _colors.black,
     width: 50,
     textAlign: 'center',
-  }
+  },
 });
