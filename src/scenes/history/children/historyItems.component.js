@@ -1,33 +1,43 @@
+import styles from '@src/styles/scenes/history.styles';
 import {ListItem} from '@react-native-material/core';
-import {View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
+import MatIcon from 'react-native-vector-icons/AntDesign';
+import {_screenContainer} from '@src/styles/_global.styles';
 
-const list = [
-  {
-    title: 'Orden: #78131',
-    subtitle: '10/08/2022',
-    price: 60000,
-  },
-  {
-    title: 'Orden: #78130',
-    subtitle: '10/08/2022',
-    price: 60000,
-  },
-];
+// The source object
+const list = {
+  currencyType: 'COP',
+  description: 'Pan bimbo',
+  imageUrl: 'https://..',
+  name: 'Pan Bimbo',
+  price: 7000,
+  quantity: 5,
+};
 
 const HistoryItems = () => {
   return (
-    <View style={{
-        padding: 20, 
-    }}>
+    /*  <SafeAreaView style={_screenContainer}> */
+    <View
+      style={{
+        padding: 20,
+        display: 'flex',
+      }}>
       {list.map((l, i) => (
-        <ListItem
-          key={i}
-          title={l.title}
-          subtitle={l.subtitle}
-          bottomDivider
-        />
+        <>
+          <MatIcon name="right" style={styles.icon} size={12} color="black" />
+          <ListItem
+            key={i}
+            title={l.currencyType}
+            description={l.description}
+            url={l.imageUrl}
+            name={l.name}
+            price={l.price}
+            quantity={l.quantity}
+          />
+        </>
       ))}
     </View>
+    /* </SafeAreaView> */
   );
 };
 
