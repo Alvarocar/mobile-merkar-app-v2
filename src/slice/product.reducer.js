@@ -41,10 +41,13 @@ const productSlice = createSlice({
       state.productDetail = null;
     },
     SAVE_IN_PRODUCT_LIST: updateTotal((state, action) => {
-      const {product, quantity} = action.payload;
-      state.products = [...state.products, action.payload];
-      state.total = state.products.reduce((a, b) => a.price + b.price);
-      console.info(state.products);
+      state.products = [
+        ...state.products.filter(p => p.id != action.payload.id),
+        action.payload,
+      ];
+      state.total = state.products.reduce(
+        (a, b) => a.price * a.quantity + b.price * b.quantity,
+      );
     }),
     DELETE_PRODUCT_IN_LIST: updateTotal((state, action) => {
       const id = action.payload;

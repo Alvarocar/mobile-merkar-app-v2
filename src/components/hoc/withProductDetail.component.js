@@ -5,7 +5,7 @@ import {
 } from '@src/slice/product.reducer';
 import {isNull} from 'lodash';
 import PropTypes from 'prop-types';
-import {useCallback, useMemo} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {Modal, Pressable, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import ProductDetail from '../cards/productDetail.component';
@@ -13,20 +13,33 @@ import styles from '@src/styles/hoc/withProductDetail.styles';
 
 export default WrappedComponent => {
   const WithProductDetail = ({product, onClean, saveProduct, ...props}) => {
-    const Footer = useCallback(() => {
-      return (
-        <View style={styles.footer}>
-          <Pressable style={styles.add}>
-            <Text style={styles.text} onPress={() => saveProduct(product)}>
-              Agregar
-            </Text>
-          </Pressable>
-          <Pressable style={styles.cancel} onPress={onClean}>
-            <Text style={styles.text}>Cancelar</Text>
-          </Pressable>
-        </View>
-      );
-    });
+    const save = useCallback(
+      data => {
+        saveProduct(data);
+        onClean();
+      },
+      [saveProduct, onClean],
+    );
+
+    const Footer = useCallback(
+      ({product, quantity}) => {
+        return (
+          <View style={styles.footer}>
+            <Pressable style={styles.add}>
+              <Text
+                style={styles.text}
+                onPress={() => save({...product, quantity})}>
+                Agregar
+              </Text>
+            </Pressable>
+            <Pressable style={styles.cancel} onPress={onClean}>
+              <Text style={styles.text}>Cancelar</Text>
+            </Pressable>
+          </View>
+        );
+      },
+      [saveProduct, onClean],
+    );
 
     const ProductView = useMemo(() => {
       if (isNull(product)) {

@@ -1,16 +1,18 @@
-import {useCallback, useState, useMemo} from 'react';
+import {useCallback, useState, useMemo, useEffect} from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import styles from '@src/styles/cards/productDetail.styles';
-import {isUndefined} from 'lodash';
+import {isUndefined, stubTrue} from 'lodash';
 
 const ProductDetail = ({
   product,
   footer: Footer,
   footerProps = {},
   styleProduct = {},
+  initialCount = 1,
+  suscribe = stubTrue,
 }) => {
-  const [counter, setCounter] = useState(1);
+  const [counter, setCounter] = useState(initialCount);
   const increment = useCallback(() => {
     setCounter(c => c + 1);
   }, [setCounter]);
@@ -25,6 +27,10 @@ const ProductDetail = ({
     () => product.price * counter,
     [product.price, counter],
   );
+
+  useEffect(() => {
+    suscribe(counter);
+  }, [counter]);
 
   return (
     <View style={[styles.product, styleProduct]}>
@@ -48,7 +54,9 @@ const ProductDetail = ({
           style={
             styles.description
           }>{`Precio Unitario: $${product.price}`}</Text>
-        {!isUndefined(Footer) && <Footer {...footerProps} />}
+        {!isUndefined(Footer) && (
+          <Footer {...footerProps} product={product} quantity={counter} />
+        )}
       </View>
     </View>
   );
