@@ -13,8 +13,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {selectTotal} from '@src/slice/product.reducer';
 import {connect} from 'react-redux';
 import {numberToMoney} from '@src/utils/number.util';
+import {CLEAN_HISTORY} from '@src/slice/history.reducer';
 
-const HomeScreen = ({productList: ProductList, total}) => {
+const HomeScreen = ({productList: ProductList, total, clean}) => {
   return (
     <SafeAreaView style={_screenContainer}>
       <CardScreen
@@ -40,9 +41,13 @@ const mapStateToProps = state => ({
   total: selectTotal(state),
 });
 
+const mapDispatchToProps = dispatch => ({
+  clean: () => dispatch(CLEAN_HISTORY()),
+});
+
 export default compose(
   WithNfc,
   withProductDetail,
   withProductList,
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(HomeScreen);

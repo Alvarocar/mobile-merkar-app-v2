@@ -1,8 +1,10 @@
 import React, {useMemo} from 'react';
 import {connect} from 'react-redux';
 import {
+  DROP_PRODUCT_LIST,
   selectProducts,
   selectProductSelected,
+  selectTotal,
   SELECT_PRODUCT_BY_ID,
 } from '@src/slice/product.reducer';
 import {isEmpty} from 'lodash';
@@ -14,9 +16,17 @@ import {
   containerHeight,
   headerHeight,
 } from '@src/styles/cards/_cardEmpty.styles';
+import {SAVE_NEW_HISTORY} from '@src/slice/history.reducer';
 
 export default WrappedComponent => {
-  const WithProductList = ({products, selected, onSelected}) => {
+  const WithProductList = ({
+    products,
+    selected,
+    onSelected,
+    onSaveHistory,
+    onClean,
+    total,
+  }) => {
     const ProductList = useMemo(() => {
       if (isEmpty(products)) return undefined;
       console.log(products);
@@ -29,6 +39,9 @@ export default WrappedComponent => {
           <FlatList
             nestedScrollEnabled
             data={products}
+            style={{
+              height: containerHeight - headerHeight - 20,
+            }}
             renderItem={({item}) => (
               <ProductRow
                 selected={selected?.id ? selected.id : null}
@@ -37,14 +50,19 @@ export default WrappedComponent => {
               />
             )}
           />
-          <View style={{alignItems: 'center'}}>
-            <Pressable style={styles.finishButton}>
+          <View style={{alignItems: 'center', paddingTop: 20}}>
+            <Pressable
+              style={styles.finishButton}
+              onPress={() => {
+                onSaveHistory({products, total});
+                onClean();
+              }}>
               <Text style={styles.finishText}>Finalizar Compra</Text>
             </Pressable>
           </View>
         </Box>
       );
-    }, [products, selected, onSelected]);
+    }, [products, selected, onSelected, total]);
 
     return <WrappedComponent productList={ProductList} />;
   };
@@ -54,10 +72,13 @@ export default WrappedComponent => {
   const mapStateToProps = state => ({
     products: selectProducts(state),
     selected: selectProductSelected(state),
+    total: selectTotal(state),
   });
 
-  const mapDispatchToProps = dipatch => ({
-    onSelected: id => dipatch(SELECT_PRODUCT_BY_ID(id)),
+  const mapDispatchToProps = dispatch => ({
+    onSelected: id => dispatch(SELECT_PRODUCT_BY_ID(id)),
+    onSaveHistory: products => dispatch(SAVE_NEW_HISTORY(products)),
+    onClean: () => dispatch(DROP_PRODUCT_LIST()),
   });
 
   return connect(mapStateToProps, mapDispatchToProps)(WithProductList);

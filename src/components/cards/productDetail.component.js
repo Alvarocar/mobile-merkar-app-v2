@@ -3,6 +3,7 @@ import {Image, Pressable, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import styles from '@src/styles/cards/productDetail.styles';
 import {isUndefined, stubTrue} from 'lodash';
+import {numberToMoney} from '@src/utils/number.util';
 
 const ProductDetail = ({
   product,
@@ -42,7 +43,9 @@ const ProductDetail = ({
         <Image style={styles.image} source={{uri: product.imageUrl}} />
       </View>
       <View style={[styles.right, stylesRight]}>
-        <Text style={styles.price}>{`Precio Total: $${totalPrice}`}</Text>
+        <Text style={styles.price}>{`Precio Total: $${numberToMoney(
+          totalPrice,
+        )}`}</Text>
         <Text style={styles.description}> {product.description} </Text>
         <View style={[styles.countSection, styleCount]}>
           <Pressable style={[styles.action, styles.minus]} onPress={decrement}>
@@ -53,10 +56,9 @@ const ProductDetail = ({
             <Text style={styles.actionText}>+</Text>
           </Pressable>
         </View>
-        <Text
-          style={
-            styles.description
-          }>{`Precio Unitario: $${product.price}`}</Text>
+        <Text style={styles.description}>{`Precio Unitario: $${numberToMoney(
+          product.price,
+        )}`}</Text>
         {!isUndefined(Footer) && (
           <Footer {...footerProps} product={product} quantity={counter} />
         )}

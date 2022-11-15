@@ -3,6 +3,7 @@ import {_screenContainer} from '@src/styles/_global.styles';
 import {SafeAreaView} from 'react-native';
 import Header from './children/header.component';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import HistoryList from './children/historyList.component';
 
 const History = () => {
   return (
@@ -10,7 +11,9 @@ const History = () => {
       <CardScreen
         header={
           <Header title="Mis Órdenes" icon={Icon} iconName="timelapse" />
-        }></CardScreen>
+        }>
+        <HistoryList />
+      </CardScreen>
     </SafeAreaView>
   );
 };
