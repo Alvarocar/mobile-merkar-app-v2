@@ -9,7 +9,6 @@ export default StyleSheet.create({
     borderRadius: 20,
     display: 'flex',
     flexDirection: 'row',
-    height: 300,
   },
   title: {
     color: _colors.black,

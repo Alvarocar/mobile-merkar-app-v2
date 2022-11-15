@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {dimensions, _colors} from '../_global.styles';
+import {_colors} from '../_global.styles';
 
 export const row = StyleSheet.create({
   item: {

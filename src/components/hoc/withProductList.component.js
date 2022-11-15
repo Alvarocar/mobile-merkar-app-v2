@@ -24,7 +24,7 @@ export default WrappedComponent => {
         <Box
           style={{
             justifyContent: 'space-between',
-            minHeight: containerHeight - headerHeight * 2.5,
+            height: containerHeight - headerHeight - 20,
           }}>
           <FlatList
             nestedScrollEnabled

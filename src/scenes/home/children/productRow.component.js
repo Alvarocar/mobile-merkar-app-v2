@@ -7,7 +7,10 @@ import {IconButton, List, MD3Colors} from 'react-native-paper';
 import {Image} from 'react-native';
 import ProductDetail from '@src/components/cards/productDetail.component';
 import {connect} from 'react-redux';
-import {SAVE_IN_PRODUCT_LIST} from '@src/slice/product.reducer';
+import {
+  DELETE_PRODUCT_IN_LIST,
+  SAVE_IN_PRODUCT_LIST,
+} from '@src/slice/product.reducer';
 import {_colors} from '@src/styles/_global.styles';
 import {stubTrue} from 'lodash';
 
@@ -26,7 +29,7 @@ const RightContent = ({product, isExpanded}) => {
   );
 };
 
-const ButtonToDelete = () => {
+const ButtonToDelete = ({eventDelete = stubTrue}) => {
   return (
     <Pressable
       style={{
@@ -38,14 +41,21 @@ const ButtonToDelete = () => {
         bottom: 10,
         borderRadius: 10,
         alignItems: 'center',
-      }}>
+      }}
+      onPress={eventDelete}>
       <IconButton icon="trash-can" iconColor={_colors.white} />
     </Pressable>
   );
 };
 
 //alvaro
-const ProductRow = ({product, selected, save, onPress = stubTrue}) => {
+const ProductRow = ({
+  product,
+  selected,
+  save,
+  deleteProduct,
+  onPress = stubTrue,
+}) => {
   const isOpen = useMemo(() => product.id === selected, [selected, product]);
   const saveItem = useCallback(
     quantity => {
@@ -77,6 +87,9 @@ const ProductRow = ({product, selected, save, onPress = stubTrue}) => {
         initialCount={product.quantity}
         stylesRight={{height: 150}}
         footer={ButtonToDelete}
+        footerProps={{
+          eventDelete: () => deleteProduct(product),
+        }}
         styleCount={{justifyContent: 'flex-start'}}
       />
     </List.Accordion>
@@ -97,6 +110,7 @@ ProductRow.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   save: product => dispatch(SAVE_IN_PRODUCT_LIST(product)),
+  deleteProduct: product => dispatch(DELETE_PRODUCT_IN_LIST(product.id)),
 });
 
 export default connect(null, mapDispatchToProps)(ProductRow);
