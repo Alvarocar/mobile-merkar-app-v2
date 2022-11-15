@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {ProductRepository} from '@src/repository/product.repository';
-import {isEmpty} from 'lodash';
+import {isEmpty, isUndefined} from 'lodash';
 
 const productRepo = new ProductRepository();
 
@@ -27,11 +27,15 @@ export const GET_PRODUCT_BY_ID = createAsyncThunk(
 const updateTotal = callback => (state, action) => {
   callback(state, action);
   const p = state.products;
+  let total = 0;
   if (isEmpty(p)) {
-    state.total = 0;
+    state.total = total;
     return;
   }
-  state.total = p.reduce((a, b) => a.price * a.quantity + b.price * b.quantity);
+  p.forEach(p => {
+    total = total + p.price * p.quantity;
+  });
+  state.total = total;
 };
 
 const productSlice = createSlice({
@@ -44,8 +48,8 @@ const productSlice = createSlice({
     SAVE_IN_PRODUCT_LIST: updateTotal((state, action) => {
       const product = state.products.find(p => p.id === action.payload.id);
       if (product) {
-        state.products.map(p => {
-          if (p.id === product.id) return product;
+        state.products = state.products.map(p => {
+          if (p.id === product.id) return action.payload;
           return p;
         });
         return;
@@ -99,3 +103,5 @@ export const selectProducts = state => state.product.products;
 export const selectProductDetail = state => state.product.productDetail;
 
 export const selectProductSelected = state => state.product.productSelected;
+
+export const selectTotal = state => state.product.total;
