@@ -9,6 +9,7 @@ const initialState = () => {
     products: [],
     productDetail: null,
     total: 0,
+    productSelected: null,
   };
 };
 
@@ -63,6 +64,12 @@ const productSlice = createSlice({
     DROP_PRODUCT_LIST: updateTotal(state => {
       state.products = [];
     }),
+    SELECT_PRODUCT_BY_ID: (state, action) => {
+      state.productSelected = state.products.find(
+        prod => prod.id === action.payload,
+      );
+      console.log('ejecutado', state.productSelected);
+    },
   },
   extraReducers: builder => {
     builder.addCase(GET_PRODUCT_BY_ID.fulfilled, (state, action) => {
@@ -83,8 +90,11 @@ export const {
   DELETE_PRODUCT_IN_LIST,
   DROP_PRODUCT_LIST,
   SAVE_IN_PRODUCT_LIST,
+  SELECT_PRODUCT_BY_ID,
 } = productSlice.actions;
 
 export const selectProducts = state => state.product.products;
 
 export const selectProductDetail = state => state.product.productDetail;
+
+export const selectProductSelected = state => state.product.productSelected;

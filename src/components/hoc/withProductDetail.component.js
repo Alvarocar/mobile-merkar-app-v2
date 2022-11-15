@@ -1,9 +1,11 @@
 import {
   CLEAN_DETAIL,
   SAVE_IN_PRODUCT_LIST,
+  selectIsProductInCart,
   selectProductDetail,
+  selectProducts,
 } from '@src/slice/product.reducer';
-import {isNull} from 'lodash';
+import {isNull, isUndefined} from 'lodash';
 import PropTypes from 'prop-types';
 import {useCallback, useMemo, useState} from 'react';
 import {Modal, Pressable, Text, View} from 'react-native';
@@ -12,7 +14,13 @@ import ProductDetail from '../cards/productDetail.component';
 import styles from '@src/styles/hoc/withProductDetail.styles';
 
 export default WrappedComponent => {
-  const WithProductDetail = ({product, onClean, saveProduct, ...props}) => {
+  const WithProductDetail = ({
+    product,
+    onClean,
+    saveProduct,
+    allProducts,
+    ...props
+  }) => {
     const save = useCallback(
       data => {
         saveProduct(data);
@@ -45,6 +53,7 @@ export default WrappedComponent => {
       if (isNull(product)) {
         return <></>;
       }
+      const productInfo = allProducts.find(p => p.id === product.id);
       return (
         <Modal
           visible
@@ -58,6 +67,9 @@ export default WrappedComponent => {
                 styleContainer={styles.card}
                 product={product}
                 onPressMask={onClean}
+                initialCount={
+                  isUndefined(productInfo) ? 1 : productInfo.quantity
+                }
                 footer={Footer}
               />
             </View>
@@ -86,6 +98,7 @@ export default WrappedComponent => {
 
   const mapStateToProps = state => ({
     product: selectProductDetail(state),
+    allProducts: selectProducts(state),
   });
 
   const mapDispatchToProps = dispatch => ({

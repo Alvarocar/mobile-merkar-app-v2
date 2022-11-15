@@ -11,6 +11,9 @@ const ProductDetail = ({
   styleProduct = {},
   initialCount = 1,
   suscribe = stubTrue,
+  title = true,
+  stylesRight = {},
+  styleCount = {},
 }) => {
   const [counter, setCounter] = useState(initialCount);
   const increment = useCallback(() => {
@@ -35,13 +38,13 @@ const ProductDetail = ({
   return (
     <View style={[styles.product, styleProduct]}>
       <View style={styles.left}>
-        <Text style={styles.title}> {product.name} </Text>
+        {title && <Text style={styles.title}> {product.name} </Text>}
         <Image style={styles.image} source={{uri: product.imageUrl}} />
       </View>
-      <View style={styles.right}>
+      <View style={[styles.right, stylesRight]}>
         <Text style={styles.price}>{`Precio Total: $${totalPrice}`}</Text>
         <Text style={styles.description}> {product.description} </Text>
-        <View style={styles.countSection}>
+        <View style={[styles.countSection, styleCount]}>
           <Pressable style={[styles.action, styles.minus]} onPress={decrement}>
             <Text style={styles.actionText}>-</Text>
           </Pressable>
