@@ -1,12 +1,17 @@
-import { _borderRadius, _colors, dimensions, _footer } from "@src/styles/_global.styles";
-import { StyleSheet } from "react-native";
+import {
+  _borderRadius,
+  _colors,
+  dimensions,
+  _footer,
+} from '@src/styles/_global.styles';
+import {StyleSheet} from 'react-native';
 
-const containerHeight = dimensions.fullHeight - _footer.height - 10
-const headerHeight = 150
+export const containerHeight = dimensions.fullHeight - _footer.height - 10;
+export const headerHeight = 150;
 
 export const cardEmptyStyles = StyleSheet.create({
   container: {
-    width: (dimensions.fullWidth - 20),
+    width: dimensions.fullWidth - 20,
     marginLeft: 'auto',
     marginRight: 'auto',
     marginTop: 20,
@@ -22,8 +27,8 @@ export const cardEmptyStyles = StyleSheet.create({
   body: {
     backgroundColor: _colors.white,
     width: '100%',
-    height: (containerHeight - headerHeight),
+    height: containerHeight - headerHeight,
     borderBottomStartRadius: _borderRadius.md,
     borderBottomEndRadius: _borderRadius.md,
   },
-})
+});

@@ -14,17 +14,6 @@ const HomeScreen = ({productList: ProductList}) => {
     <SafeAreaView style={_screenContainer}>
       <CardScreen header={<MainHeader />}>
         {isUndefined(ProductList) ? <NfcBody /> : ProductList}
-        {/*         <ProductRow
-          product={{
-            name: 'hola',
-            price: 15,
-            quantity: 10,
-            imageUrl:
-              'https://cdn.miaguila.com/images/alkosto/7702511000038.jpg',
-            id: 1,
-          }}
-          selected={1}
-        /> */}
       </CardScreen>
     </SafeAreaView>
   );

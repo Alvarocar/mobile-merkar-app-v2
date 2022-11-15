@@ -20,7 +20,7 @@ const RightContent = ({product, isExpanded}) => {
   if (isExpanded) return <Icon name="down" size={20} color="black" />;
   return (
     <View style={{flexDirection: 'row'}}>
-      <Text style={{color: 'black'}}>{product.price}</Text>
+      <Text style={{color: 'black'}}>{product.price * product.quantity}</Text>
       <Icon style={{marginLeft: 10}} name="right" size={20} color="black" />
     </View>
   );

@@ -31,7 +31,7 @@ const updateTotal = callback => (state, action) => {
     state.total = 0;
     return;
   }
-  state.total = p.reduce((a, b) => a.price + b.price);
+  state.total = p.reduce((a, b) => a.price * a.quantity + b.price * b.quantity);
 };
 
 const productSlice = createSlice({
@@ -42,13 +42,15 @@ const productSlice = createSlice({
       state.productDetail = null;
     },
     SAVE_IN_PRODUCT_LIST: updateTotal((state, action) => {
-      state.products = [
-        ...state.products.filter(p => p.id != action.payload.id),
-        action.payload,
-      ];
-      state.total = state.products.reduce(
-        (a, b) => a.price * a.quantity + b.price * b.quantity,
-      );
+      const product = state.products.find(p => p.id === action.payload.id);
+      if (product) {
+        state.products.map(p => {
+          if (p.id === product.id) return product;
+          return p;
+        });
+        return;
+      }
+      state.products = [...state.products, action.payload];
     }),
     DELETE_PRODUCT_IN_LIST: updateTotal((state, action) => {
       const id = action.payload;
@@ -68,7 +70,6 @@ const productSlice = createSlice({
       state.productSelected = state.products.find(
         prod => prod.id === action.payload,
       );
-      console.log('ejecutado', state.productSelected);
     },
   },
   extraReducers: builder => {
